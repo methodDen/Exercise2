@@ -43,7 +43,8 @@ public class PersonController {
         mapper.registerModule(module);
         String serialized = mapper.writeValueAsString(new Person());
         try {
-            context.json(dao.queryForAll());
+//            context.json(dao.queryForAll());
+            context.result(mapper.writeValueAsString(dao.queryForAll()));
             context.status(Constants.OK_200);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,9 +58,8 @@ public class PersonController {
         module.addSerializer(Person.class, new PersonUserSerializer());
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(module);
-        String serialized = mapper.writeValueAsString(new Person());
         try {
-            context.json(dao.queryForAll());
+            context.result(mapper.writeValueAsString(dao.queryForAll())); // Using Custom Serializer instead of default
             context.status(Constants.OK_200);
         } catch (SQLException e) {
             e.printStackTrace();

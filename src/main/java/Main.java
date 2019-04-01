@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
+import static io.javalin.security.SecurityUtil.roles;
 
 
 public class Main {
@@ -31,8 +32,9 @@ public class Main {
         app.start();
         app.routes(() -> {
             path("persons", ()-> {
-                get(ctx -> new PersonController().getAll(ctx));
-                post(ctx -> new PersonController().create(ctx));
+                get("/secured", ctx -> new PersonController().getAll(ctx), roles(Role.ADMIN));
+                get("/unsecured", ctx-> new PersonController().getAllForUsers(ctx), roles(Role.ANONYMOUS, Role.USER));
+                post(ctx -> new PersonController().create(ctx), roles(Role.ANONYMOUS, Role.USER, Role.ADMIN));
             });
         });
     }

@@ -14,6 +14,7 @@ import java.util.List;
 
 public class Connection {
     private static ConnectionSource source;
+
     static {
         try {
             source = new JdbcConnectionSource("jdbc:sqlite:C:\\SQL\\Personas.db");
@@ -29,19 +30,19 @@ public class Connection {
     }
 
     public static Role getUserRole(Context ctx) throws SQLException {
+//        System.out.println(ctx.header("Authorization"));
+        if (ctx.header("Authorization") == null) return Role.ANONYMOUS;
         String login = ctx.basicAuthCredentials().getUsername();
         String password = ctx.basicAuthCredentials().getPassword();
-
-        Dao<Person, Integer> personDAO = DaoManager.createDao(Connection.getSource(), Person.class);
-        List<Person> whoGotLogin = new ArrayList<>();
-        whoGotLogin = personDAO.queryBuilder().where().eq("login", login).query();
-        if (whoGotLogin.size() == 1) {
-            Person p = whoGotLogin.get(0);
-            if (BCrypt.checkpw(password, p.getPassword())) {
-                return p.getRole();
+            Dao<Person, Integer> personDAO = DaoManager.createDao(Connection.getSource(), Person.class);
+            List<Person> whoGotLogin = new ArrayList<>();
+            whoGotLogin = personDAO.queryBuilder().where().eq("id", login).query();
+            if (whoGotLogin.size() == 1) {
+                Person p = whoGotLogin.get(0);
+                if (BCrypt.checkpw(password, p.getPassword())) {
+                    return p.getRole();
+                }
             }
-        }
-        return Role.ANONYMOUS;
+            return Role.ANONYMOUS;
     }
-
 }
