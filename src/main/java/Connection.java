@@ -30,7 +30,6 @@ public class Connection {
     }
 
     public static Role getUserRole(Context ctx) throws SQLException {
-//        System.out.println(ctx.header("Authorization"));
         if (ctx.header("Authorization") == null) return Role.ANONYMOUS;
         String login = ctx.basicAuthCredentials().getUsername();
         String password = ctx.basicAuthCredentials().getPassword();

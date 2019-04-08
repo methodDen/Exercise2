@@ -1,7 +1,5 @@
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.util.Objects;
 
 @DatabaseTable (tableName = "Persons")
